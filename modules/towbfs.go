@@ -6,27 +6,33 @@ import (
 )
 
 const (
-	cliToolPath    = "C:\\Program Files (x86)\\ISO to WBFS\\wbfs_file.exe"
-	convertDirPath = "F:\\wbfs"
+	cliToolPath = "C:\\Program Files (x86)\\ISO to WBFS\\wbfs_file.exe"
+	_logName    = "[ISO TO WBFS] "
 )
 
 func ConvertToWBFS(info *DownloadInfo) {
 	fullPath := info.LastFilePath
 
-	logName := "[ISO TO WBFS] "
+	// fmt.Println(_logName + fullPath)
+
+	fmt.Printf("%sWorking on %s\n", _logName, info.Name)
+
+	// info.TaskStatus <- fmt.Sprintf(_logName+"Working on %s", info.Name)
 
 	err := cliToWBFS(fullPath)
 
 	if err != nil {
-		fmt.Println(logName+info.Name+" Error converting file:", err)
+		//info.TaskStatus <- _logName + info.Name + " Error Converting"
+		fmt.Println(_logName+info.Name+" Error converting file:", err)
 	} else {
-		fmt.Println(logName+"Successfully converted file:", info.Name)
+		fmt.Println(_logName+"Successfully converted file:", info.Name)
+		// info.TaskStatus <- _logName + "Successfully converted file: " + info.Name
 		Remove(fullPath)
 	}
 }
 
 func cliToWBFS(file string) error {
-	cmd := exec.Command(cliToolPath, file, "convert", convertDirPath)
+	cmd := exec.Command(cliToolPath, file, "convert", Config.WBFSDirPath)
 
 	stdoutStderr, err := cmd.CombinedOutput()
 
@@ -34,7 +40,7 @@ func cliToWBFS(file string) error {
 		return err
 	}
 
-	fmt.Println(string(stdoutStderr))
+	fmt.Println(_logName + string(stdoutStderr))
 
 	return nil
 }

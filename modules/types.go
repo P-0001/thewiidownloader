@@ -10,6 +10,16 @@ type DownloadInfo struct {
 	estimated    time.Duration
 	ProgressCh   chan int64
 	DoneCh       chan bool
+	TaskEnd      chan bool
+	TaskStatus   chan string
 	Name         string
 	LastFilePath string
+}
+
+type ConfigS struct {
+	LinksFilePath string
+	ZippedDirPath string
+	RvzDirPath    string
+	IsoDirPath    string
+	WBFSDirPath   string
 }

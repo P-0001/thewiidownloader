@@ -9,17 +9,14 @@ import (
 	"time"
 )
 
-const (
-	//	ZipFolderDir      = "C:\\Users\\chrsh\\OneDrive\\Desktop\\code\\go\\downloader\\downloads"
-	destinationFolder = "E:\\other"
-)
-
 func UnzipTask(info *DownloadInfo) {
 	fmt.Printf("Unziping Processing: %s\n", info.Name)
 
+	//info.TaskStatus <- fmt.Sprintf("Unzipping %s", info.Name)
+
 	zipFilePath := info.LastFilePath
 
-	err := unzip(zipFilePath, destinationFolder, info)
+	err := unzip(zipFilePath, Config.RvzDirPath, info)
 
 	if err != nil {
 		fmt.Printf("[%s] Error during unzip: %s\n", info.Name, err)
@@ -28,7 +25,9 @@ func UnzipTask(info *DownloadInfo) {
 
 	Remove(zipFilePath)
 
-	fmt.Printf("Unzipped successfully: %s\n", zipFilePath)
+	//	info.TaskStatus <- fmt.Sprintf("Unzipped successfully: %s", info.Name)
+
+	fmt.Printf("Unzipped successfully: %s\n", info.Name)
 
 }
 

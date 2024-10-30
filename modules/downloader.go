@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -12,31 +11,27 @@ import (
 	"time"
 )
 
-const (
-	linksFilePath = "new-links.txt"
-)
-
-func DownloadFile(info *DownloadInfo) {
+func DownloadFile(info *DownloadInfo) int {
 	defer close(info.DoneCh) // Ensure doneCh is closed when function exits
 
 	fileName := info.Name
 
-	filePath := filepath.Join("C:\\Users\\chrsh\\OneDrive\\Desktop\\code\\go\\downloader\\downloads", fileName)
+	filePath := filepath.Join(Config.ZippedDirPath, fileName)
 
 	info.LastFilePath = filePath
 
 	// Check if file already exists
 	if _, err := os.Stat(filePath); err == nil {
 		fmt.Printf("File %s already exists. Skipping download.\n", fileName)
-		removeLinkFromFile(info.Url)
-		return
+		//	removeLinkFromFile(info.Url)
+		return 0
 	}
 
 	// Start download
 	resp, err := http.Get(info.Url)
 	if err != nil {
 		fmt.Println("Error downloading:", info.Url, err)
-		return
+		return 0
 	}
 
 	defer resp.Body.Close()
@@ -49,7 +44,7 @@ func DownloadFile(info *DownloadInfo) {
 	out, err := os.Create(filePath)
 	if err != nil {
 		fmt.Println("Error creating file:", err)
-		return
+		return 0
 	}
 
 	defer out.Close()
@@ -61,7 +56,7 @@ func DownloadFile(info *DownloadInfo) {
 	_, err = io.Copy(out, progressReader)
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
-		return
+		return 0
 	}
 
 	err = removeLinkFromFile(info.Url)
@@ -71,11 +66,13 @@ func DownloadFile(info *DownloadInfo) {
 	}
 
 	// fmt.Printf("Download complete: %s\n", info.url)
+
+	return 1
 }
 
 func removeLinkFromFile(linkToRemove string) error {
 	// Open the file for reading
-	file, err := os.Open(linksFilePath)
+	file, err := os.Open(Config.LinksFilePath)
 	if err != nil {
 		return err
 	}
@@ -101,7 +98,7 @@ func removeLinkFromFile(linkToRemove string) error {
 	}
 
 	// Open the file for writing (truncate to clear existing content)
-	file, err = os.OpenFile(linksFilePath, os.O_WRONLY|os.O_TRUNC, 0644)
+	file, err = os.OpenFile(Config.LinksFilePath, os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
@@ -121,14 +118,13 @@ func removeLinkFromFile(linkToRemove string) error {
 		return err
 	}
 
-	fmt.Printf("Removed links from %s.\n", linksFilePath)
+	// fmt.Printf("Removed links from %s.\n", linksFilePath)
 
 	return nil
 }
 
 func MonitorProgress(info *DownloadInfo) {
-	randomNum := rand.Intn(5) + 1
-	ticker := time.NewTicker(time.Duration(randomNum) * time.Second)
+	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 
 	var lastBytes int64
@@ -163,8 +159,12 @@ func MonitorProgress(info *DownloadInfo) {
 				}
 
 				ts := "[" + timeStamp() + "]"
-				fmt.Printf("%s %s: %.2f%% complete. Speed: %.2f MB/s. ETA: %s\n",
-					ts, info.Name, percent, ewma/(1024*1024), remainingTime.Round(time.Second))
+
+				msg := fmt.Sprintf("%s %s: %.2f%% complete. Speed: %.2f MB/s. ETA: %s", ts, info.Name, percent, ewma/(1024*1024), remainingTime.Round(time.Second))
+
+				// info.TaskStatus <- msg
+
+				fmt.Println(msg)
 			}
 
 			lastBytes = downloaded
@@ -172,6 +172,7 @@ func MonitorProgress(info *DownloadInfo) {
 
 		case <-info.DoneCh:
 			fmt.Printf("Download complete: %s\n", info.Name)
+			//info.TaskStatus <- fmt.Sprintf("Download complete: %s", info.Name)
 			return
 		}
 	}
