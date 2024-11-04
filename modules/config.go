@@ -22,7 +22,7 @@ func mustGetEnv(key string, isPath bool) string {
 		found, err := isValidPath(value)
 
 		if !found || err != nil {
-			panic("Missing or invalid environment variable: " + key)
+			panic("Invalid environment variable can't find path: " + key)
 		}
 
 	}
