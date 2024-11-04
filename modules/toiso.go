@@ -9,8 +9,6 @@ import (
 
 const (
 	logName = "[RVZ TO ISO] "
-
-	dolphinToolPath = "C:\\Users\\chrsh\\OneDrive\\Desktop\\Dolphin-x64\\DolphinTool.exe"
 )
 
 func CovertRVZToISO(info *DownloadInfo) {
@@ -45,7 +43,7 @@ func CovertRVZToISO(info *DownloadInfo) {
 func cliRvzToISO(inputFilePath string, outputPath string) error {
 	fmt.Printf("%sWriting %s\n", logName, outputPath)
 
-	cmd := exec.Command(dolphinToolPath, "convert",
+	cmd := exec.Command(Config.DolphinToolPath, "convert",
 		"--format=iso",
 		"--input="+inputFilePath,
 		"--output="+outputPath)

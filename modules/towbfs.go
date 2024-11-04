@@ -6,8 +6,7 @@ import (
 )
 
 const (
-	cliToolPath = "C:\\Program Files (x86)\\ISO to WBFS\\wbfs_file.exe"
-	_logName    = "[ISO TO WBFS] "
+	_logName = "[ISO TO WBFS] "
 )
 
 func ConvertToWBFS(info *DownloadInfo) {
@@ -32,7 +31,7 @@ func ConvertToWBFS(info *DownloadInfo) {
 }
 
 func cliToWBFS(file string) error {
-	cmd := exec.Command(cliToolPath, file, "convert", Config.WBFSDirPath)
+	cmd := exec.Command(Config.ISOtoWBFSPath, file, "convert", Config.WBFSDirPath)
 
 	stdoutStderr, err := cmd.CombinedOutput()
 

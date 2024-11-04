@@ -46,6 +46,8 @@ func LoadConfig() {
 	Config.RvzDirPath = mustGetEnv("RvzDirPath", true)
 	Config.IsoDirPath = mustGetEnv("IsoDirPath", true)
 	Config.WBFSDirPath = mustGetEnv("WBFSDirPath", true)
+	Config.DolphinToolPath = mustGetEnv("DolphinToolPath", true)
+	Config.ISOtoWBFSPath = mustGetEnv("ISOtoWBFSPath", true)
 
 	concurrentLimitStr := GetEnv("ConcurrentLimit")
 

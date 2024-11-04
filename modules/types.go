@@ -22,6 +22,8 @@ type ConfigS struct {
 	RvzDirPath      string
 	IsoDirPath      string
 	WBFSDirPath     string
+	DolphinToolPath string
+	ISOtoWBFSPath   string
 	ConcurrentLimit int
 }
 
