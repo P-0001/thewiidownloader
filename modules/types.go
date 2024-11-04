@@ -17,11 +17,12 @@ type DownloadInfo struct {
 }
 
 type ConfigS struct {
-	LinksFilePath string
-	ZippedDirPath string
-	RvzDirPath    string
-	IsoDirPath    string
-	WBFSDirPath   string
+	LinksFilePath   string
+	ZippedDirPath   string
+	RvzDirPath      string
+	IsoDirPath      string
+	WBFSDirPath     string
+	ConcurrentLimit int
 }
 
 type GameData []GameDatum

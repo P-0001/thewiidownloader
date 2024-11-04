@@ -4,6 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 var (
@@ -45,6 +46,16 @@ func LoadConfig() {
 	Config.RvzDirPath = mustGetEnv("RvzDirPath", true)
 	Config.IsoDirPath = mustGetEnv("IsoDirPath", true)
 	Config.WBFSDirPath = mustGetEnv("WBFSDirPath", true)
+
+	concurrentLimitStr := GetEnv("ConcurrentLimit")
+
+	num, err := strconv.Atoi(concurrentLimitStr)
+
+	if err != nil {
+		num = 3
+	}
+
+	Config.ConcurrentLimit = num
 
 	ConfigLoaded = true
 }

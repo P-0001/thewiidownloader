@@ -14,7 +14,11 @@ import (
 	"time"
 )
 
+const _Version = "1.0.0"
+
 func main() {
+	fmt.Println("The Wii Downloader v" + _Version)
+
 	modules.LoadConfig()
 
 	if !modules.ConfigLoaded {
@@ -35,7 +39,7 @@ func main() {
 		return
 	}
 
-	concurrentDownloads := make(chan struct{}, 8) // Limit the downloads
+	concurrentDownloads := make(chan struct{}, config.ConcurrentLimit) // Limit the downloads
 	stopNewDownloads := make(chan struct{})
 	allDownloadsComplete := make(chan struct{})
 	var running = 0
