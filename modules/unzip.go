@@ -10,7 +10,7 @@ import (
 )
 
 func UnzipTask(info *DownloadInfo) {
-	fmt.Printf("Unziping Processing: %s\n", info.Name)
+	fmt.Printf("Unzipping Processing: %s\n", info.Name)
 
 	//info.TaskStatus <- fmt.Sprintf("Unzipping %s", info.Name)
 
